@@ -33,11 +33,11 @@
   .stat-card-link:hover .stat-card {
     transform: translateY(-5px);
     box-shadow: 0 12px 35px rgba(0,0,0,0.1);
-    border-color: var(--primary-color, #007BFF);
+    border-color: #ff4d6d;
   }
   .stat-card .stat-icon {
     font-size: 2.5rem;
-    color: var(--primary-color, #007BFF);
+    color: #ff4d6d;
     margin-bottom: 0.5rem;
   }
   .stat-card .stat-number {
@@ -46,13 +46,14 @@
   }
   .stat-card .stat-label {
     font-size: 1rem;
-    color: var(--text-light, #6c757d);
+    color: #6c757d;
   }
-  
+
   /* Section Title Styling */
   .section-title {
       font-weight: 700;
       margin-bottom: 1.5rem;
+      color: #ff4d6d;
   }
 
   /* Meal Tabs Styling */
@@ -60,9 +61,11 @@
     border-radius: 50px;
     font-weight: 600;
     padding: 0.75rem 1.5rem;
+    color: #333;
   }
   .nav-pills .nav-link.active {
-    background-color: var(--primary-color, #007BFF);
+    background-color: #ff4d6d;
+    color: #fff;
   }
 
   /* Form Card Styling */
@@ -72,10 +75,10 @@
     box-shadow: 0 10px 30px rgba(0,0,0,0.07);
     padding: 2rem;
     position: sticky;
-    top: 100px; /* Adjust based on navbar height */
+    top: 100px; 
   }
 
-  /* Student Order Card Styling (inside modal) */
+  /* Student Order Card Styling */
   .order-request-card {
       background-color: #f8f9fa;
       border-radius: 15px;
@@ -84,8 +87,8 @@
       padding: 1.25rem;
   }
   .order-info .student-name { font-weight: 700; }
-  .order-info .dish-name { font-weight: 600; color: var(--text-dark, #212529); }
-  .order-info .order-meta { font-size: 0.9rem; color: var(--text-light, #6c757d); }
+  .order-info .dish-name { font-weight: 600; color: #212529; }
+  .order-info .order-meta { font-size: 0.9rem; color: #6c757d; }
   .order-actions .btn { border-radius: 50px; padding: 0.3rem 1rem; }
 
   /* Dish Card Styling */
@@ -105,7 +108,7 @@
   .veg-indicator.is-veg { background-color: #28a745; }
   .veg-indicator.not-veg { background-color: #dc3545; }
 
-  /* UPDATED: All Menus Modal Card Styling */
+  /* All Menus Modal Card Styling */
   .modal-dish-card {
       display: flex;
       align-items: center;
@@ -128,11 +131,12 @@
   .modal-dish-info h6 {
       margin: 0;
       font-weight: 600;
+      color: #333;
   }
   .modal-dish-info p {
       margin: 0;
       font-size: 0.9rem;
-      color: var(--text-light, #6c757d);
+      color: #6c757d;
   }
   .modal-dish-actions {
       flex-shrink: 0;
@@ -141,7 +145,26 @@
       padding: 0.3rem 0.8rem;
   }
 
+  /* Buttons */
+  .btn-primary {
+    background-color: #ff4d6d;
+    border-color: #ff4d6d;
+  }
+  .btn-primary:hover {
+    background-color: #ff2a4d;
+    border-color: #ff2a4d;
+  }
+  .btn-outline-primary {
+    color: #ff4d6d;
+    border-color: #ff4d6d;
+  }
+  .btn-outline-primary:hover {
+    background-color: #ff4d6d;
+    color: #fff;
+    border-color: #ff4d6d;
+  }
 </style>
+
 
 <div class="container dashboard-container">
 

@@ -15,10 +15,16 @@
     
     <style>
         :root {
-            --primary-color: #007BFF;
+            --primary-color: #D32F2F;
+            --primary-dark: #B71C1C;
+            --primary-light: #EF5350;
+            --secondary-color: #FF6F00;
+            --accent-color: #FFA726;
             --text-dark: #212529;
             --text-light: #6c757d;
-            --background-offwhite: #f8f9fa;
+            --background-offwhite: #FFF8F5;
+            --background-cream: #FFFBF7;
+            --shadow-color: rgba(211, 47, 47, 0.15);
         }
 
         body {
@@ -27,26 +33,53 @@
         }
 
         .navbar {
-            background: #fff;
+            background: linear-gradient(135deg, #ffffff 0%, #FFF8F5 100%);
             transition: all 0.3s ease;
             padding: 1rem 0;
-            border-bottom: 1px solid #e9ecef;
+            border-bottom: 2px solid #FFE8E0;
+            box-shadow: 0 2px 15px rgba(211, 47, 47, 0.08);
         }
         .navbar.scrolled {
-            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            box-shadow: 0 4px 20px var(--shadow-color);
             padding: 0.75rem 0;
         }
         .navbar-brand {
             font-weight: 700;
-            color: var(--primary-color) !important;
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
             font-size: 1.7rem;
+            transition: transform 0.3s ease;
+        }
+        .navbar-brand:hover {
+            transform: scale(1.05);
         }
         .navbar-nav .nav-link {
             color: var(--text-dark) !important;
             font-weight: 600;
-            transition: color 0.2s;
+            transition: all 0.3s ease;
+            position: relative;
+            padding: 0.5rem 1rem;
         }
-        .navbar-nav .nav-link:hover, .navbar-nav .nav-link.active {
+        .navbar-nav .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            width: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+            transition: all 0.3s ease;
+            transform: translateX(-50%);
+            border-radius: 3px;
+        }
+        .navbar-nav .nav-link:hover::after,
+        .navbar-nav .nav-link.active::after {
+            width: 80%;
+        }
+        .navbar-nav .nav-link:hover,
+        .navbar-nav .nav-link.active {
             color: var(--primary-color) !important;
         }
 
@@ -57,31 +90,84 @@
             object-fit: cover;
             border: 2px solid var(--primary-color);
             cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 8px var(--shadow-color);
+        }
+        .profile-circle:hover {
+            transform: scale(1.1);
+            border-color: var(--secondary-color);
+            box-shadow: 0 4px 12px var(--shadow-color);
         }
         .dropdown-menu {
-            border-radius: 12px;
-            border: 1px solid #e9ecef;
-            box-shadow: 0 6px 15px rgba(0,0,0,0.1);
+            border-radius: 15px;
+            border: 2px solid #FFE8E0;
+            box-shadow: 0 8px 25px var(--shadow-color);
+            background: var(--background-cream);
         }
         .dropdown-header {
             font-weight: 600;
+            color: var(--primary-color);
+            border-bottom: 2px solid #FFE8E0;
         }
         .dropdown-item {
             font-weight: 500;
+            transition: all 0.3s ease;
+            border-radius: 8px;
+            margin: 4px 8px;
+        }
+        .dropdown-item:hover {
+            background: linear-gradient(135deg, #FFEBEE 0%, #FFE8E0 100%);
+            color: var(--primary-color);
+            transform: translateX(5px);
         }
         .dropdown-item.text-danger {
             font-weight: 600;
+            color: var(--primary-color) !important;
+        }
+        .dropdown-item.text-danger:hover {
+            background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+            color: white !important;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%);
+            border: none;
+            box-shadow: 0 4px 15px var(--shadow-color);
+            transition: all 0.3s ease;
+        }
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(211, 47, 47, 0.3);
+            background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary-color) 100%);
+        }
+
+        .btn-outline-primary {
+            border: 2px solid var(--primary-color);
+            color: var(--primary-color);
+            background: transparent;
+            transition: all 0.3s ease;
+        }
+        .btn-outline-primary:hover {
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%);
+            color: white;
+            border-color: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px var(--shadow-color);
         }
 
         footer {
-            background-color: #fff;
-            border-top: 1px solid #e9ecef;
+            background: linear-gradient(135deg, #ffffff 0%, #FFF8F5 100%);
+            border-top: 2px solid #FFE8E0;
             color: var(--text-light);
             font-size: 0.9rem;
             padding: 1.5rem 0;
+            box-shadow: 0 -2px 15px rgba(211, 47, 47, 0.05);
         }
         footer strong {
-            color: var(--text-dark);
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
         }
     </style>
 </head>
@@ -105,7 +191,7 @@
                                 {% if user.profile_image %}
                                     <img src="{{ user.profile_image.url }}" alt="Profile" class="profile-circle">
                                 {% else %}
-                                    <div class="bg-light text-primary d-flex justify-content-center align-items-center profile-circle fw-bold fs-5">
+                                    <div class="bg-light text-primary d-flex justify-content-center align-items-center profile-circle fw-bold fs-5" style="background: linear-gradient(135deg, #FFEBEE, #FFE8E0) !important; color: var(--primary-color) !important;">
                                         {{ user.username|first|upper }}
                                     </div>
                                 {% endif %}
