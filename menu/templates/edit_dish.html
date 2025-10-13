@@ -5,58 +5,71 @@
 
 {% block content %}
 <style>
-  /* Dedicated container for the edit page, themed to match */
+  body { font-family: 'Poppins', sans-serif; background-color: #f8f9fa; }
+
+  /* Main Container */
   .edit-dish-container {
-    font-family: 'Poppins', sans-serif;
-    background: linear-gradient(135deg, #e0f7fa 0%, #d1e5f0 100%);
-    /* This makes the container fill 100% of its parent's (the <main> tag) height */
-    height: 100%; 
-    width: 100%;
+    min-height: 90vh;
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 3rem 1rem;
-    position: relative;
-    overflow: hidden;
+    padding: 4rem 1rem;
+    background: linear-gradient(135deg, #fff0f2 0%, #fdf7f0 100%);
   }
 
-  /* Card styling consistent with the dashboard's form-card */
-  .edit-dish-container .card {
-    border-radius: 20px;
-    border: none;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-    animation: fadeInUp 0.8s ease-in-out;
-    background: #fff;
+  /* Card Styling */
+  .edit-card {
+    background: #ffffff;
+    border-radius: 25px;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.08);
+    overflow: hidden;
     width: 100%;
     max-width: 550px;
-    z-index: 1;
+    animation: fadeInUp 0.8s ease-in-out;
   }
 
-  .edit-dish-container .card-header {
-    background-color: var(--primary-color, #007BFF);
+  .edit-card .card-header {
+    background: linear-gradient(90deg, #FF6F61, #FF9472);
     color: #fff;
     font-weight: 700;
-    border-top-left-radius: 20px;
-    border-top-right-radius: 20px;
-    padding: 1.25rem 1.5rem;
+    border-top-left-radius: 25px;
+    border-top-right-radius: 25px;
+    padding: 1.5rem 2rem;
+    text-align: center;
   }
-  
-  .edit-dish-container .form-label {
-    font-weight: 600;
-    color: var(--text-dark, #212529);
-  }
-  
-  .edit-dish-container .form-control, .edit-dish-container .form-select {
-    border-radius: 10px;
-    padding: 12px;
+
+  /* Form Inputs */
+  .form-label { font-weight: 600; color: #34495E; }
+  .form-control, .form-select {
+    border-radius: 12px;
+    padding: 12px 14px;
     border: 1px solid #ced4da;
+    transition: all 0.3s;
+  }
+  .form-control:focus, .form-select:focus {
+    border-color: #FF6F61;
+    box-shadow: 0 0 0 0.2rem rgba(255,111,97,0.25);
   }
 
-  .edit-dish-container .form-control:focus, .edit-dish-container .form-select:focus {
-      border-color: var(--primary-color, #007BFF);
-      box-shadow: 0 0 0 0.25rem rgba(0, 123, 255, 0.25);
+  /* Toggle Switch */
+  .form-check-input { cursor: pointer; }
+  .form-check-label { font-size: 0.9rem; color: #7f8c8d; }
+
+  /* Buttons */
+  .btn-primary {
+    background: linear-gradient(90deg, #FF6F61, #FF9472);
+    border: none;
+    transition: all 0.3s;
+  }
+  .btn-primary:hover {
+    background: linear-gradient(90deg, #FF9472, #FF6F61);
+  }
+  .btn-secondary {
+    background: #bdc3c7;
+    border: none;
   }
 
+  /* Animations */
   @keyframes fadeInUp {
     0% { opacity: 0; transform: translateY(30px); }
     100% { opacity: 1; transform: translateY(0); }
@@ -64,42 +77,39 @@
 </style>
 
 <div class="edit-dish-container">
-  <div class="row justify-content-center w-100 px-3">
-    <div class="col-md-8 col-lg-7">
-      <div class="card shadow-sm">
-        <div class="card-header">
-          <h4 class="mb-0">Edit "{{ dish.name }}"</h4>
-        </div>
-        <div class="card-body p-4 p-md-5">
-          <form method="post" enctype="multipart/form-data">
-            {% csrf_token %}
-            {{ form.non_field_errors }}
+  <div class="edit-card">
+    <div class="card-header">
+      <h4>Edit "{{ dish.name }}"</h4>
+    </div>
+    <div class="card-body p-4 p-md-5">
+      <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{ form.non_field_errors }}
 
-            {% for field in form %}
-              <div class="mb-3">
-                <label for="{{ field.id_for_label }}" class="form-label">{{ field.label }}</label>
-                {% if field.name == 'is_veg' or field.name == 'available' %}
-                  <div class="form-check form-switch mt-1">
-                    {% render_field field class="form-check-input" %}
-                    <label class="form-check-label" for="{{ field.id_for_label }}">{{ field.help_text }}</label>
-                  </div>
-                {% else %}
-                  {% render_field field class="form-control" %}
-                {% endif %}
-                
-                {% for error in field.errors %}
-                  <div class="text-danger small mt-1">{{ error }}</div>
-                {% endfor %}
+        {% for field in form %}
+          <div class="mb-3">
+            <label for="{{ field.id_for_label }}" class="form-label">{{ field.label }}</label>
+
+            {% if field.name == 'is_veg' or field.name == 'available' %}
+              <div class="form-check form-switch mt-1">
+                {% render_field field class="form-check-input" %}
+                <label class="form-check-label" for="{{ field.id_for_label }}">{{ field.help_text }}</label>
               </div>
-            {% endfor %}
+            {% else %}
+              {% render_field field class="form-control" %}
+            {% endif %}
 
-            <div class="d-flex justify-content-between align-items-center mt-4">
-              <a href="{% url 'canteen_dashboard' %}" class="btn btn-secondary rounded-pill px-4">Cancel</a>
-              <button type="submit" class="btn btn-primary rounded-pill px-4">Update Dish</button>
-            </div>
-          </form>
+            {% for error in field.errors %}
+              <div class="text-danger small mt-1">{{ error }}</div>
+            {% endfor %}
+          </div>
+        {% endfor %}
+
+        <div class="d-flex justify-content-between align-items-center mt-4">
+          <a href="{% url 'canteen_dashboard' %}" class="btn btn-secondary rounded-pill px-4">Cancel</a>
+          <button type="submit" class="btn btn-primary rounded-pill px-4">Update Dish</button>
         </div>
-      </div>
+      </form>
     </div>
   </div>
 </div>

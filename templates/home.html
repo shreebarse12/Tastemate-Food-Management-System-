@@ -7,52 +7,56 @@
 <style>
     @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap');
 
-    /* NEW LIGHT THEME */
     :root {
-      --primary-color: #007BFF; /* A clean, professional blue */
-      --secondary-color: #6c757d;
+      --primary-color: #D32F2F;
+      --primary-dark: #B71C1C;
+      --secondary-color: #FF6F00;
+      --accent-color: #FFA726;
       --background-light: #ffffff;
-      --background-offwhite: #f8f9fa;
+      --background-offwhite: #FFF8F5;
       --text-dark: #212529;
       --text-light: #6c757d;
     }
 
-    /* General Body Style */
     body {
         font-family: 'Poppins', sans-serif;
         background-color: var(--background-offwhite);
     }
 
-    /* Hero Section - Light & Airy with Food Animations */
+    /* Hero Section - Warm Food Theme */
     .hero-section {
-        background: linear-gradient(135deg, #e0f7fa 0%, #d1e5f0 100%);
+        background: linear-gradient(135deg, #FFEBEE 0%, #FFE0B2 50%, #FFCCBC 100%);
         padding: 120px 20px;
         color: var(--text-dark);
         text-align: center;
         position: relative;
-        overflow: hidden; /* Important for containing the food icons */
+        overflow: hidden;
     }
 
     .hero-content {
         position: relative;
-        z-index: 2; /* Keep content above the food icons */
+        z-index: 2;
     }
 
     .hero-section h1 {
         font-size: 3.8rem;
         font-weight: 700;
         margin-bottom: 15px;
+        background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
         animation: slideInDown 1s ease-in-out;
     }
 
     .hero-section p.lead {
         font-size: 1.2rem;
         margin-bottom: 40px;
-        font-weight: 300;
+        font-weight: 400;
         max-width: 650px;
         margin-left: auto;
         margin-right: auto;
-        color: var(--text-light);
+        color: var(--text-dark);
         animation: slideInUp 1s ease-in-out;
     }
 
@@ -63,108 +67,248 @@
         transition: all 0.3s ease-in-out;
         font-weight: 600;
         border: 2px solid transparent;
-        box-shadow: 0 5px 20px rgba(0, 123, 255, 0.15);
     }
     
     .hero-section .btn-primary {
-        background-color: var(--primary-color);
+        background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%);
         color: #fff;
+        box-shadow: 0 5px 20px rgba(211, 47, 47, 0.3);
     }
     .hero-section .btn-primary:hover {
         transform: translateY(-3px);
-        box-shadow: 0 8px 25px rgba(0, 123, 255, 0.25);
+        box-shadow: 0 8px 30px rgba(211, 47, 47, 0.4);
     }
     .hero-section .btn-outline-primary {
         border-color: var(--primary-color);
         color: var(--primary-color);
+        background: rgba(255, 255, 255, 0.9);
     }
     .hero-section .btn-outline-primary:hover {
-        background-color: var(--primary-color);
+        background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%);
         color: #fff;
         transform: translateY(-3px);
+        box-shadow: 0 8px 25px rgba(211, 47, 47, 0.3);
     }
     
     .login-prompt {
         margin-top: 2.5rem;
-        color: var(--text-light);
+        color: var(--text-dark);
     }
     .login-prompt a {
         color: var(--primary-color);
         font-weight: 600;
         text-decoration: none;
-        border-bottom: 1px solid;
+        border-bottom: 2px solid var(--primary-color);
+        transition: all 0.3s ease;
     }
-    .login-prompt a:hover { text-decoration: underline; }
+    .login-prompt a:hover {
+        color: var(--secondary-color);
+        border-bottom-color: var(--secondary-color);
+    }
 
-    /* NEW: Floating Food Image Styles */
+    /* Floating Food Image Styles */
     .food-icon {
         position: absolute;
         display: block;
         z-index: 1;
-        opacity: 0.2; /* Slightly increased opacity for images */
+        opacity: 0.25;
         animation: float-food 20s infinite linear;
     }
     .food-icon img {
         width: 100%;
         height: 100%;
-        border-radius: 50%; /* Makes the images circular */
+        border-radius: 50%;
         object-fit: cover;
-        box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+        box-shadow: 0 10px 30px rgba(211, 47, 47, 0.2);
+        border: 3px solid rgba(255, 255, 255, 0.8);
     }
-    /* Individual icon positions and animation delays */
     .food-icon-1 { width: 150px; height: 150px; top: 10%; left: 15%; animation-duration: 25s; }
     .food-icon-2 { width: 80px; height: 80px; top: 20%; right: 10%; animation-duration: 18s; animation-delay: -5s; }
     .food-icon-3 { width: 100px; height: 100px; bottom: 15%; left: 25%; animation-duration: 22s; animation-delay: -10s; }
     .food-icon-4 { width: 120px; height: 120px; bottom: 25%; right: 20%; animation-duration: 30s; animation-delay: -2s; }
 
-    /* Floating Animation Keyframes */
     @keyframes float-food {
         0% { transform: translateY(0px) rotate(0deg); }
-        50% { transform: translateY(-25px) rotate(15deg); opacity: 0.25; }
+        50% { transform: translateY(-25px) rotate(15deg); opacity: 0.3; }
         100% { transform: translateY(0px) rotate(0deg); }
     }
     
-    /* Other sections remain the same */
     .section { padding: 80px 20px; }
-    .section-title { text-align: center; margin-bottom: 60px; font-weight: 700; font-size: 2.8rem; color: var(--text-dark); }
-    .section-title span { color: var(--primary-color); }
-    .feature-card { text-align: center; padding: 35px; border: 1px solid #e9ecef; border-radius: 15px; transition: all 0.3s ease; background-color: var(--background-light); height: 100%; }
-    .feature-card:hover { transform: translateY(-10px); box-shadow: 0 15px 40px rgba(0,0,0,0.08); border-color: var(--primary-color); }
-    .feature-icon { width: 70px; height: 70px; margin: 0 auto 25px; background: var(--primary-color); color: #fff; border-radius: 15px; display: flex; align-items: center; justify-content: center; font-size: 1.8rem; box-shadow: 0 8px 15px rgba(0, 123, 255, 0.2); }
-    .feature-card h3 { font-weight: 600; margin-bottom: 15px; font-size: 1.3rem; }
-    .feature-card p { color: var(--text-light); font-size: 0.95rem; }
-    .how-it-works-section { background-color: var(--background-light); }
-    .step-link { text-decoration: none; color: inherit; display: block; height: 100%; }
-    .step-card { text-align: center; position: relative; padding: 35px; border: 1px solid #e9ecef; border-radius: 15px; background-color: var(--background-light); height: 100%; transition: all 0.3s ease; }
-    .step-link:hover .step-card { transform: translateY(-10px); box-shadow: 0 15px 40px rgba(0,0,0,0.08); border-color: var(--primary-color); }
-    .step-number { width: 60px; height: 60px; margin: 0 auto 20px; border: 2px solid var(--primary-color); color: var(--primary-color); background-color: #fff; border-radius: 50%; font-size: 1.8rem; font-weight: 700; display: flex; align-items: center; justify-content: center; transition: all 0.3s ease; }
-    .step-link:hover .step-number { background-color: var(--primary-color); color: #fff; }
-    .step-card h3 { font-weight: 600; margin-bottom: 10px; }
-    .step-card p { color: var(--text-light); max-width: 300px; margin: 0 auto; }
-    .cta-section { background: var(--background-light); color: var(--text-dark); text-align: center; padding: 80px 20px; }
-    .cta-section h2 { font-weight: 700; font-size: 2.5rem; }
-    .cta-section .btn-cta { background-color: var(--primary-color); color: #fff; padding: 14px 35px; font-weight: 600; border-radius: 50px; transition: all 0.3s ease; }
-    .cta-section .btn-cta:hover { transform: scale(1.05); box-shadow: 0 8px 25px rgba(0, 123, 255, 0.25); }
-    .reveal { opacity: 0; transform: translateY(50px); transition: all 0.8s cubic-bezier(0.5, 0, 0, 1); }
-    .reveal.visible { opacity: 1; transform: translateY(0); }
-    @keyframes slideInDown { from { transform: translateY(-50px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
-    @keyframes slideInUp { from { transform: translateY(50px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+    .section-title {
+        text-align: center;
+        margin-bottom: 60px;
+        font-weight: 700;
+        font-size: 2.8rem;
+        color: var(--text-dark);
+    }
+    .section-title span {
+        background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+    }
+    
+    .feature-card {
+        text-align: center;
+        padding: 35px;
+        border: 2px solid #FFE8E0;
+        border-radius: 20px;
+        transition: all 0.3s ease;
+        background: linear-gradient(135deg, #ffffff 0%, #FFFBF7 100%);
+        height: 100%;
+        box-shadow: 0 5px 15px rgba(211, 47, 47, 0.08);
+    }
+    .feature-card:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 15px 40px rgba(211, 47, 47, 0.15);
+        border-color: var(--primary-color);
+    }
+    .feature-icon {
+        width: 70px;
+        height: 70px;
+        margin: 0 auto 25px;
+        background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+        color: #fff;
+        border-radius: 20px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.8rem;
+        box-shadow: 0 8px 20px rgba(211, 47, 47, 0.3);
+        transition: all 0.3s ease;
+    }
+    .feature-card:hover .feature-icon {
+        transform: scale(1.1) rotate(5deg);
+    }
+    .feature-card h3 {
+        font-weight: 600;
+        margin-bottom: 15px;
+        font-size: 1.3rem;
+        color: var(--primary-color);
+    }
+    .feature-card p {
+        color: var(--text-light);
+        font-size: 0.95rem;
+    }
+    
+    .how-it-works-section {
+        background: linear-gradient(135deg, #FFFBF7 0%, #FFF8F5 100%);
+    }
+    .step-link {
+        text-decoration: none;
+        color: inherit;
+        display: block;
+        height: 100%;
+    }
+    .step-card {
+        text-align: center;
+        position: relative;
+        padding: 35px;
+        border: 2px solid #FFE8E0;
+        border-radius: 20px;
+        background: #ffffff;
+        height: 100%;
+        transition: all 0.3s ease;
+        box-shadow: 0 5px 15px rgba(211, 47, 47, 0.08);
+    }
+    .step-link:hover .step-card {
+        transform: translateY(-10px);
+        box-shadow: 0 15px 40px rgba(211, 47, 47, 0.15);
+        border-color: var(--primary-color);
+    }
+    .step-number {
+        width: 60px;
+        height: 60px;
+        margin: 0 auto 20px;
+        border: 3px solid var(--primary-color);
+        color: var(--primary-color);
+        background-color: #fff;
+        border-radius: 50%;
+        font-size: 1.8rem;
+        font-weight: 700;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.3s ease;
+    }
+    .step-link:hover .step-number {
+        background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+        color: #fff;
+        transform: scale(1.1);
+    }
+    .step-card h3 {
+        font-weight: 600;
+        margin-bottom: 10px;
+        color: var(--primary-color);
+    }
+    .step-card p {
+        color: var(--text-light);
+        max-width: 300px;
+        margin: 0 auto;
+    }
+    
+    .cta-section {
+        background: linear-gradient(135deg, #FFEBEE 0%, #FFE0B2 100%);
+        color: var(--text-dark);
+        text-align: center;
+        padding: 80px 20px;
+    }
+    .cta-section h2 {
+        font-weight: 700;
+        font-size: 2.5rem;
+        background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+    }
+    .cta-section .btn-cta {
+        background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%);
+        color: #fff;
+        padding: 14px 35px;
+        font-weight: 600;
+        border-radius: 50px;
+        transition: all 0.3s ease;
+        box-shadow: 0 5px 20px rgba(211, 47, 47, 0.3);
+    }
+    .cta-section .btn-cta:hover {
+        transform: scale(1.05);
+        box-shadow: 0 8px 30px rgba(211, 47, 47, 0.4);
+    }
+    
+    .reveal {
+        opacity: 0;
+        transform: translateY(50px);
+        transition: all 0.8s cubic-bezier(0.5, 0, 0, 1);
+    }
+    .reveal.visible {
+        opacity: 1;
+        transform: translateY(0);
+    }
+    
+    @keyframes slideInDown {
+        from { transform: translateY(-50px); opacity: 0; }
+        to { transform: translateY(0); opacity: 1; }
+    }
+    @keyframes slideInUp {
+        from { transform: translateY(50px); opacity: 0; }
+        to { transform: translateY(0); opacity: 1; }
+    }
 </style>
 
 <!-- Hero Section -->
 <div class="hero-section">
     <!-- Animated food images in the background -->
     <div class="food-icon food-icon-1">
-        <img src="https://placehold.co/300x300/ffffff/cccccc?text=Indian+Thali" alt="Floating image of a rice thali">
+        <img src="https://img.freepik.com/premium-psd/tasty-fried-vegetable-rice-plate-isolated-transparent-background_1214547-2352.jpg" alt="Floating image of a rice thali">
     </div>
     <div class="food-icon food-icon-2">
-       <img src="https://placehold.co/160x160/ffffff/cccccc?text=Samosa" alt="Floating image of a samosa">
+       <img src="https://png.pngtree.com/png-vector/20240717/ourmid/pngtree-mouth-watering-samosa-for-indian-cuisine-lovers-png-image_13134994.png" alt="Floating image of a samosa">
     </div>
     <div class="food-icon food-icon-3">
-        <img src="https://placehold.co/200x200/ffffff/cccccc?text=Dosa" alt="Floating image of a dosa">
+        <img src="https://www.shutterstock.com/image-vector/dosa-vector-illustration-sambhar-green-600nw-1497144002.jpg" alt="Floating image of a dosa">
     </div>
     <div class="food-icon food-icon-4">
-        <img src="https://placehold.co/240x240/ffffff/cccccc?text=Chai" alt="Floating image of a cup of tea">
+        <img src="https://img.freepik.com/free-vector/tea-cup-floating-cartoon-vector-icon-illustration-drink-object-icon-isolated-flat-vector_138676-13666.jpg?t=st=1759964634~exp=1759968234~hmac=34525ee7b685db39f49c0aad17005ab6007c95ceeedb09cdaa16ab87b3b37f22" alt="Floating image of a cup of tea">
     </div>
 
     <div class="hero-content">
@@ -246,7 +390,7 @@
 <div class="cta-section reveal">
     <div class="container">
         <h2 class="mb-4">Ready to Find Your Next Favorite Meal?</h2>
-        <p class="lead mb-4" style="max-width: 600px; margin: 0 auto;">Join the TasteMate community today and simplify your campus dining experience.</p>
+        <p class="lead mb-4" style="max-width: 600px; margin: 0 auto; color: var(--text-dark);">Join the TasteMate community today and simplify your campus dining experience.</p>
         <a href="{% url 'register_student' %}" class="btn btn-cta btn-lg mt-3">Sign Up for Free</a>
     </div>
 </div>
@@ -284,4 +428,3 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 </script>
 {% endblock %}
-
