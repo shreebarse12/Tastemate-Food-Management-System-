@@ -2,6 +2,9 @@
 {% block title %}My Orders - TasteMate{% endblock %}
 
 {% block content %}
+<!-- Font Awesome for icons -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
 <style>
     /* Container and background */
     .orders-container {
@@ -48,80 +51,179 @@
         font-size: 1.1rem;
     }
 
-    /* Order Card Styling */
+    /* --- REDESIGNED ORDER CARD --- */
     .order-card {
-        background-color: #fff;
-        border: none;
-        border-radius: 20px;
-        box-shadow: 0 10px 30px rgba(211, 47, 47, 0.15);
-        margin-bottom: 1.8rem;
+        background-color: rgba(255, 255, 255, 0.95);
+        border: 1px solid rgba(255,255,255,0.2);
+        border-radius: 24px;
+        box-shadow: 0 10px 40px rgba(211, 47, 47, 0.08);
+        margin-bottom: 1.5rem;
         display: flex;
-        align-items: center;
-        padding: 1.5rem;
-        transition: all 0.3s ease;
+        flex-direction: row; /* Default row for desktop */
+        padding: 1.25rem;
+        transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         position: relative;
         z-index: 1;
+        overflow: hidden;
     }
+    
     .order-card:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 15px 40px rgba(211,47,47,0.25);
+        transform: translateY(-8px) scale(1.01);
+        box-shadow: 0 20px 50px rgba(211,47,47,0.15);
+        border-color: #ffccbc;
+    }
+
+    /* Accent line on the left */
+    .order-card::before {
+        content: '';
+        position: absolute;
+        left: 0;
+        top: 0;
+        bottom: 0;
+        width: 6px;
+        background: linear-gradient(to bottom, #FF6F00, #D32F2F);
+        opacity: 0.8;
     }
 
     .order-card .dish-image {
-        width: 90px;
-        height: 90px;
-        border-radius: 15px;
+        width: 120px;
+        height: 120px;
+        border-radius: 16px;
         object-fit: cover;
-        margin-right: 1.8rem;
+        margin-right: 1.5rem;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.1);
     }
 
     .order-card .order-details {
         flex-grow: 1;
-    }
-    .order-card .dish-name {
-        font-weight: 600;
-        font-size: 1.25rem;
-        margin-bottom: 0.25rem;
-    }
-    .order-card .price-quantity {
-        color: #6c757d;
-        margin-bottom: 0.25rem;
-    }
-    .order-card .order-time {
-        font-size: 0.9rem;
-        color: #888;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
     }
 
-    .order-card .order-status-actions {
-        text-align: right;
+    .order-card .dish-name {
+        font-weight: 700;
+        font-size: 1.4rem;
+        color: #2c3e50;
+        margin-bottom: 0.25rem;
+    }
+    
+    .order-card .order-meta {
+        font-size: 0.95rem;
+        color: #6c757d;
+        margin-bottom: 0.5rem;
+        display: flex;
+        gap: 15px;
+        align-items: center;
+    }
+    
+    .order-meta span {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+    }
+
+    .order-card .total-price {
+        font-size: 1.1rem;
+        font-weight: 700;
+        color: #D32F2F;
+    }
+
+    /* Right side actions */
+    .order-card .order-actions-container {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-end;
+        justify-content: space-between;
+        min-width: 200px;
+        margin-left: 1rem;
+    }
+
+    /* Badges */
+    .badge-group {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-end;
+        gap: 0.5rem;
     }
 
     .status-badge {
         font-weight: 600;
-        padding: 0.5em 1em;
+        padding: 0.5em 1.2em;
+        border-radius: 50px;
+        font-size: 0.8rem;
+        letter-spacing: 0.5px;
+        text-transform: uppercase;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+    }
+
+    /* Refined Status Colors */
+    .status-pending { background-color: #FFF8E1; color: #F57F17; border: 1px solid #FFE082; }
+    .status-accepted { background-color: #E8F5E9; color: #2E7D32; border: 1px solid #A5D6A7; }
+    .status-rejected { background-color: #FFEBEE; color: #C62828; border: 1px solid #FFCDD2; }
+    .status-completed { background-color: #E3F2FD; color: #1565C0; border: 1px solid #90CAF9; }
+
+    /* Payment Badges */
+    .payment-badge {
+        font-size: 0.8rem;
+        padding: 0.4em 1em;
+        border-radius: 50px;
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+    }
+    .payment-done {
+        background-color: #f0fff4;
+        color: #166534;
+        border: 1px solid #bbf7d0;
+    }
+    .payment-counter {
+        background-color: #fff7ed;
+        color: #9a3412;
+        border: 1px solid #fed7aa;
+    }
+
+    .btn-delete {
+        background-color: transparent;
+        color: #999;
+        border: 1px solid #eee;
+        padding: 0.4rem 1rem;
         border-radius: 50px;
         font-size: 0.85rem;
-        margin-bottom: 0.75rem;
-        display: inline-block;
+        transition: all 0.3s;
+        display: flex;
+        align-items: center;
+        gap: 5px;
+    }
+    .btn-delete:hover {
+        background-color: #fee2e2;
+        color: #dc2626;
+        border-color: #fecaca;
     }
 
-    /* Status colors */
-    .status-pending { background-color: #fff3cd; color: #664d03; }
-    .status-accepted { background-color: #d1e7dd; color: #0f5132; }
-    .status-rejected { background-color: #f8d7da; color: #842029; }
-    .status-completed { background-color: #cfe2ff; color: #084298; }
-
-    .order-card button.btn-outline-danger {
-        border-radius: 50px;
-        font-weight: 500;
-        transition: all 0.3s ease;
-    }
-    .order-card button.btn-outline-danger:hover {
-        background: #D32F2F;
-        color: #fff;
-        border-color: #D32F2F;
-        transform: translateY(-2px);
-        box-shadow: 0 8px 20px rgba(211,47,47,0.25);
+    /* Responsive adjustments */
+    @media (max-width: 768px) {
+        .order-card {
+            flex-direction: column;
+        }
+        .order-card .dish-image {
+            width: 100%;
+            height: 180px;
+            margin-right: 0;
+            margin-bottom: 1rem;
+        }
+        .order-card .order-actions-container {
+            flex-direction: row;
+            width: 100%;
+            margin-left: 0;
+            margin-top: 1rem;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .badge-group {
+            align-items: flex-start;
+        }
     }
 
     /* Empty state styling */
@@ -139,14 +241,8 @@
         color: #e0e0e0;
         margin-bottom: 1rem;
     }
-    .empty-state h3 {
-        font-weight: 600;
-        margin-bottom: 0.5rem;
-    }
-    .empty-state p {
-        color: #6c757d;
-        margin-bottom: 1.5rem;
-    }
+    .empty-state h3 { font-weight: 600; margin-bottom: 0.5rem; }
+    .empty-state p { color: #6c757d; margin-bottom: 1.5rem; }
 </style>
 
 <div class="orders-container">
@@ -168,22 +264,40 @@
                     
                     <div class="order-details">
                         <h5 class="dish-name">{{ order.dish.name }}</h5>
-                        <p class="price-quantity mb-1">
-                            <strong>Price:</strong> ₹{{ order.total_price }} | <strong>Quantity:</strong> {{ order.quantity }}
-                        </p>
-                        <p class="order-time mb-0">
-                            Ordered on: {{ order.ordered_at|date:"M d, Y, h:i A" }}
-                        </p>
+                        
+                        <div class="order-meta">
+                            <span><i class="far fa-clock"></i> {{ order.ordered_at|date:"M d, h:i A" }}</span>
+                            <span><i class="fas fa-utensils"></i> Qty: {{ order.quantity }}</span>
+                        </div>
+                        
+                        <div class="total-price">
+                            Total: ₹{{ order.total_price }}
+                        </div>
                     </div>
                     
-                    <div class="order-status-actions">
-                        <span class="status-badge status-{{ order.status|lower }}">
-                            {{ order.get_status_display }}
-                        </span>
+                    <div class="order-actions-container">
+                        <div class="badge-group">
+                            <!-- Status Badge -->
+                            <span class="status-badge status-{{ order.status|lower }}">
+                                {{ order.get_status_display }}
+                            </span>
+
+                            <!-- Payment Status Badge (UPDATED) -->
+                            {% if order.payment_method == 'online' %}
+                                <span class="payment-badge payment-done">
+                                    <i class="fas fa-check-circle"></i> Payment Complete
+                                </span>
+                            {% else %}
+                                <span class="payment-badge payment-counter">
+                                    <i class="fas fa-store"></i> Pay at Counter
+                                </span>
+                            {% endif %}
+                        </div>
+
                         <form action="{% url 'delete_order' order.id %}" method="post" class="mt-2">
                             {% csrf_token %}
-                            <button type="submit" class="btn btn-outline-danger btn-sm px-3" onclick="return confirm('Are you sure you want to delete this order?');">
-                                Delete
+                            <button type="submit" class="btn-delete" onclick="return confirm('Are you sure you want to delete this order?');">
+                                <i class="far fa-trash-alt"></i> Cancel Order
                             </button>
                         </form>
                     </div>

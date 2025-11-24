@@ -4,146 +4,117 @@
 {% block title %}Order: {{ dish.name }} - TasteMate{% endblock %}
 
 {% block content %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
 <style>
+    /* --- EXISTING STYLES (Unchanged) --- */
     .place-order-container {
         font-family: 'Poppins', sans-serif;
         background: linear-gradient(135deg, #FFEBEE 0%, #FFE0B2 50%, #FFCCBC 100%);
-        min-height: 100vh; 
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        padding: 3rem 1rem;
-        position: relative;
-        overflow: hidden;
+        min-height: 100vh; display: flex; align-items: center; justify-content: center;
+        padding: 3rem 1rem; position: relative; overflow: hidden;
     }
-
-    /* Floating background shapes */
-    .floating-shape {
-        position: absolute;
-        border-radius: 30%;
-        opacity: 0.12;
-        animation: float 25s infinite linear;
-        z-index: 0;
-    }
+    .floating-shape { position: absolute; border-radius: 30%; opacity: 0.12; animation: float 25s infinite linear; z-index: 0; }
     .shape1 { width: 180px; height: 180px; top: 5%; left: 5%; background: linear-gradient(135deg,#D32F2F,#FF6F00); }
     .shape2 { width: 250px; height: 250px; bottom: 10%; right: 10%; background: linear-gradient(135deg,#FF6F00,#FFA726); }
     .shape3 { width: 100px; height: 100px; top: 40%; right: 20%; background: linear-gradient(135deg,#D32F2F,#B71C1C); }
+    @keyframes float { 0% { transform: translateY(0px) rotate(0deg); } 50% { transform: translateY(-20px) rotate(180deg); } 100% { transform: translateY(0px) rotate(360deg); } }
+    .order-card { background-color: #fff; border-radius: 20px; box-shadow: 0 15px 50px rgba(211,47,47,0.15); width: 100%; max-width: 850px; overflow: hidden; animation: fadeInUp 0.8s ease-in-out; position: relative; z-index: 1; }
+    .dish-image-section { background-size: cover; background-position: center; min-height: 300px; }
+    .order-form-section { padding: 2.5rem; }
+    .order-form-section h2 { font-weight: 700; font-size: 2rem; background: linear-gradient(135deg,#D32F2F,#FF6F00); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 0.25rem; }
+    .order-form-section .dish-canteen { font-weight: 500; color: #6c757d; margin-bottom: 0.5rem; }
+    .order-form-section .dish-price { font-size: 1.3rem; font-weight: 600; color: #D32F2F; margin-bottom: 1.5rem; }
+    .quantity-selector { display: flex; align-items: center; border: 1px solid #ced4da; border-radius: 12px; overflow: hidden; width: fit-content; }
+    .quantity-selector button { background-color: #f8f9fa; border: none; width: 45px; height: 45px; font-size: 1.5rem; font-weight: 600; color: #6c757d; transition: background-color 0.2s, transform 0.2s; }
+    .quantity-selector button:hover { background-color: #e9ecef; transform: translateY(-2px); }
+    .quantity-selector input { width: 60px; text-align: center; border: none; font-size: 1.2rem; font-weight: 700; padding: 0; -moz-appearance: textfield; }
+    .quantity-selector input::-webkit-outer-spin-button, .quantity-selector input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+    
+    .payment-options { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-top: 0.5rem; }
+    .payment-option { cursor: pointer; position: relative; margin-bottom: 0; }
+    .payment-option input { position: absolute; opacity: 0; cursor: pointer; }
+    .option-content { display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 1rem; border: 2px solid #e9ecef; border-radius: 12px; transition: all 0.3s ease; text-align: center; height: 100%; color: #6c757d; background-color: #fff; }
+    .payment-option input:checked + .option-content { border-color: #D32F2F; background-color: #FFF3E0; color: #D32F2F; font-weight: 600; box-shadow: 0 4px 10px rgba(211, 47, 47, 0.1); }
+    .payment-option i { font-size: 1.5rem; margin-bottom: 0.5rem; }
+    
+    .total-price-section { margin-top: 1.5rem; font-weight: 700; font-size: 1.8rem; color: #D32F2F; border-top: 1px dashed #e0e0e0; padding-top: 1rem; }
+    .pickup-time-section { margin-top: 1.5rem; }
+    .btn-primary { border-radius: 50px; padding: 12px; background: linear-gradient(135deg,#D32F2F,#B71C1C); border: none; font-weight: 600; transition: all 0.3s ease; }
+    .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(211,47,47,0.3); }
+    @keyframes fadeInUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
 
-    @keyframes float {
-        0% { transform: translateY(0px) rotate(0deg); }
-        50% { transform: translateY(-20px) rotate(180deg); }
-        100% { transform: translateY(0px) rotate(360deg); }
+    /* --- NEW STYLES FOR PAYMENT GATEWAY MODAL --- */
+    .modal-overlay {
+        position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+        background-color: rgba(0, 0, 0, 0.6);
+        z-index: 9999;
+        display: none; /* Hidden by default */
+        align-items: center; justify-content: center;
+        backdrop-filter: blur(4px);
+        animation: fadeIn 0.3s ease;
     }
 
-    .order-card {
+    .payment-modal {
         background-color: #fff;
-        border-radius: 20px;
-        box-shadow: 0 15px 50px rgba(211,47,47,0.15);
-        width: 100%;
-        max-width: 850px;
+        width: 100%; max-width: 400px;
+        border-radius: 16px;
+        box-shadow: 0 20px 60px rgba(0,0,0,0.3);
         overflow: hidden;
-        animation: fadeInUp 0.8s ease-in-out;
-        position: relative;
-        z-index: 1;
+        animation: slideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1);
     }
 
-    .dish-image-section {
-        background-size: cover;
-        background-position: center;
-        min-height: 300px;
-    }
-
-    .order-form-section {
-        padding: 2.5rem;
-    }
-    .order-form-section h2 {
-        font-weight: 700;
-        font-size: 2rem;
-        background: linear-gradient(135deg,#D32F2F,#FF6F00);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        margin-bottom: 0.25rem;
-    }
-    .order-form-section .dish-canteen {
-        font-weight: 500;
-        color: #6c757d;
-        margin-bottom: 0.5rem;
-    }
-    .order-form-section .dish-price {
-        font-size: 1.3rem;
-        font-weight: 600;
-        color: #D32F2F;
-        margin-bottom: 1.5rem;
-    }
-
-    /* Quantity Selector */
-    .quantity-selector {
-        display: flex;
-        align-items: center;
-        border: 1px solid #ced4da;
-        border-radius: 12px;
-        overflow: hidden;
-        width: fit-content;
-    }
-    .quantity-selector button {
+    .modal-header {
         background-color: #f8f9fa;
-        border: none;
-        width: 45px;
-        height: 45px;
-        font-size: 1.5rem;
-        font-weight: 600;
-        color: #6c757d;
-        transition: background-color 0.2s, transform 0.2s;
+        padding: 1rem 1.5rem;
+        border-bottom: 1px solid #e9ecef;
+        display: flex; justify-content: space-between; align-items: center;
     }
-    .quantity-selector button:hover {
-        background-color: #e9ecef;
-        transform: translateY(-2px);
-    }
-    .quantity-selector input {
-        width: 60px;
-        text-align: center;
-        border: none;
-        font-size: 1.2rem;
-        font-weight: 700;
-        padding: 0;
-    }
-    .quantity-selector input::-webkit-outer-spin-button,
-    .quantity-selector input::-webkit-inner-spin-button {
-        -webkit-appearance: none;
-        margin: 0;
-    }
-    .quantity-selector input[type=number] {
-        -moz-appearance: textfield;
-    }
+    .modal-header h5 { margin: 0; font-weight: 700; color: #343a40; font-size: 1.1rem; }
+    .close-modal { background: none; border: none; font-size: 1.5rem; color: #6c757d; cursor: pointer; }
 
-    .total-price-section {
-        margin-top: 1.5rem;
-        font-weight: 700;
-        font-size: 1.8rem;
-        color: #D32F2F;
+    .modal-body { padding: 1.5rem; }
+    
+    .gateway-brand {
+        display: flex; align-items: center; margin-bottom: 1.5rem;
+        background: #e3f2fd; padding: 0.5rem 1rem; border-radius: 8px; color: #0d47a1; font-weight: 600; font-size: 0.9rem;
     }
+    .gateway-brand i { margin-right: 0.5rem; font-size: 1.2rem; }
 
-    .pickup-time-section {
-        margin-top: 1.5rem;
+    .payment-amount-display {
+        text-align: center; margin-bottom: 1.5rem;
     }
+    .payment-amount-display .label { font-size: 0.9rem; color: #6c757d; text-transform: uppercase; letter-spacing: 1px; }
+    .payment-amount-display .amount { font-size: 2.5rem; font-weight: 700; color: #343a40; }
 
-    .btn-primary {
-        border-radius: 50px;
-        padding: 12px;
-        background: linear-gradient(135deg,#D32F2F,#B71C1C);
-        border: none;
-        font-weight: 600;
-        transition: all 0.3s ease;
+    .payment-methods-list {
+        display: flex; flex-direction: column; gap: 0.8rem;
     }
-    .btn-primary:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 8px 25px rgba(211,47,47,0.3);
+    .pg-method {
+        display: flex; align-items: center;
+        padding: 1rem; border: 1px solid #dee2e6; border-radius: 10px; cursor: pointer; transition: all 0.2s;
     }
+    .pg-method:hover { background-color: #f8f9fa; border-color: #ced4da; }
+    .pg-method.selected { border-color: #28a745; background-color: #f0fff4; }
+    .pg-method-icon { width: 40px; text-align: center; font-size: 1.2rem; color: #555; margin-right: 1rem; }
+    .pg-method-details { flex-grow: 1; }
+    .pg-method-title { font-weight: 600; font-size: 0.95rem; color: #333; display: block; }
+    .pg-method-sub { font-size: 0.8rem; color: #888; display: block; }
+    
+    .pay-btn {
+        width: 100%; padding: 1rem; margin-top: 1.5rem;
+        background-color: #28a745; color: white; border: none; border-radius: 8px;
+        font-weight: 600; font-size: 1rem; cursor: pointer; transition: background 0.3s;
+    }
+    .pay-btn:hover { background-color: #218838; }
 
-    @keyframes fadeInUp {
-        from { opacity: 0; transform: translateY(30px); }
-        to { opacity: 1; transform: translateY(0); }
-    }
+    /* Loading Spinner inside Modal */
+    .processing-view { display: none; text-align: center; padding: 2rem 0; }
+    .spinner { border: 4px solid #f3f3f3; border-top: 4px solid #28a745; border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite; margin: 0 auto 1rem auto; }
+
+    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+    @keyframes slideUp { from { transform: translateY(50px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+    @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 </style>
 
 <div class="place-order-container">
@@ -153,41 +124,109 @@
 
     <div class="order-card">
         <div class="row g-0">
-            <!-- Left: Dish Image -->
-            <div class="col-md-6 dish-image-section" style="background-image: url('{{ dish.image.url|default:'https://placehold.co/800x800/e0f7fa/ccc?text=Dish' }}');">
-            </div>
-
-            <!-- Right: Order Form -->
+            <div class="col-md-6 dish-image-section" style="background-image: url('{{ dish.image.url|default:'https://placehold.co/800x800/e0f7fa/ccc?text=Dish' }}');"></div>
             <div class="col-md-6 order-form-section">
                 <h2>{{ dish.name }}</h2>
                 <p class="dish-canteen">from {{ dish.canteen.canteen_name|default:dish.canteen.username }}</p>
                 <p class="dish-price">Price: ₹<span id="unit-price">{{ dish.price }}</span></p>
 
-                <form method="post">
+                <form method="post" id="orderForm">
                     {% csrf_token %}
                     <div class="mb-3">
-                        <label for="quantity" class="form-label fw-bold">Quantity</label>
+                        <label class="form-label fw-bold small text-uppercase text-muted">Quantity</label>
                         <div class="quantity-selector">
                             <button type="button" id="decrement-btn">-</button>
                             <input type="number" name="quantity" id="quantity" class="form-control" min="1" value="1">
                             <button type="button" id="increment-btn">+</button>
                         </div>
                     </div>
-
                     <div class="mb-3 pickup-time-section">
-                        <label for="pickup_time" class="form-label fw-bold">Select Pickup Time</label>
-                        <input type="datetime-local" name="pickup_time" id="pickup_time" class="form-control" required>
+                        <label for="pickup_time" class="form-label fw-bold small text-uppercase text-muted">Select Pickup Time</label>
+                        <input type="datetime-local" name="pickup_time" id="pickup_time" class="form-control" required style="border-radius: 12px;">
                     </div>
-
-                    <div class="total-price-section">
-                        Total: ₹<span id="total-price">{{ dish.price }}</span>
+                    <div class="mb-4 mt-3">
+                        <label class="form-label fw-bold small text-uppercase text-muted">Payment Method</label>
+                        <div class="payment-options">
+                            <label class="payment-option">
+                                <input type="radio" name="payment_method" value="cod" checked>
+                                <span class="option-content"><i class="fas fa-wallet"></i><span>Pay at Counter</span></span>
+                            </label>
+                            <label class="payment-option">
+                                <input type="radio" name="payment_method" value="online">
+                                <span class="option-content"><i class="fas fa-qrcode"></i><span>Pay Online</span></span>
+                            </label>
+                        </div>
                     </div>
-
+                    <div class="total-price-section d-flex justify-content-between align-items-center">
+                        <span class="fs-5 text-dark fw-normal">Total Amount:</span>
+                        <span>₹<span id="total-price">{{ dish.price }}</span></span>
+                    </div>
                     <div class="d-grid mt-4">
-                        <button type="submit" class="btn btn-primary btn-lg">Confirm and Place Order</button>
+                        <button type="submit" class="btn btn-primary btn-lg shadow-sm">Confirm and Place Order</button>
                     </div>
                 </form>
             </div>
+        </div>
+    </div>
+</div>
+
+<!-- ============================================== -->
+<!-- ========= FAKE PAYMENT GATEWAY MODAL ========= -->
+<!-- ============================================== -->
+<div class="modal-overlay" id="paymentModal">
+    <div class="payment-modal">
+        <!-- Header -->
+        <div class="modal-header">
+            <h5>Secure Payment</h5>
+            <button class="close-modal" id="closeModal">&times;</button>
+        </div>
+
+        <!-- Body -->
+        <div class="modal-body" id="paymentOptionsView">
+            <div class="gateway-brand">
+                <i class="fas fa-shield-alt"></i> TasteMate Secure Gateway
+            </div>
+
+            <div class="payment-amount-display">
+                <div class="label">You are paying</div>
+                <div class="amount">₹<span id="modalAmount">0</span></div>
+            </div>
+
+            <div class="payment-methods-list">
+                <div class="pg-method selected">
+                    <div class="pg-method-icon"><i class="fab fa-google-pay" style="color:#4285F4;"></i></div>
+                    <div class="pg-method-details">
+                        <span class="pg-method-title">UPI / GPay</span>
+                        <span class="pg-method-sub">Scan QR or Enter UPI ID</span>
+                    </div>
+                    <i class="fas fa-check-circle text-success"></i>
+                </div>
+                <div class="pg-method">
+                    <div class="pg-method-icon"><i class="fas fa-credit-card text-primary"></i></div>
+                    <div class="pg-method-details">
+                        <span class="pg-method-title">Card</span>
+                        <span class="pg-method-sub">Visa, Mastercard, RuPay</span>
+                    </div>
+                </div>
+                <div class="pg-method">
+                    <div class="pg-method-icon"><i class="fas fa-globe text-info"></i></div>
+                    <div class="pg-method-details">
+                        <span class="pg-method-title">Net Banking</span>
+                        <span class="pg-method-sub">All Indian banks</span>
+                    </div>
+                </div>
+            </div>
+
+            <button class="pay-btn" id="confirmPaymentBtn">
+                Pay ₹<span id="btnAmount">0</span> Securely
+            </button>
+        </div>
+
+        <!-- Processing State (Hidden initially) -->
+        <div class="modal-body processing-view" id="processingView">
+            <div class="spinner"></div>
+            <h5 class="mb-2">Processing Payment...</h5>
+            <p class="text-muted small">Please do not close this window.</p>
         </div>
     </div>
 </div>
@@ -199,31 +238,73 @@ document.addEventListener('DOMContentLoaded', function() {
     const incrementBtn = document.getElementById('increment-btn');
     const unitPrice = parseFloat(document.getElementById('unit-price').textContent);
     const totalPriceEl = document.getElementById('total-price');
+    const orderForm = document.getElementById('orderForm');
+    
+    // Modal Elements
+    const paymentModal = document.getElementById('paymentModal');
+    const closeModal = document.getElementById('closeModal');
+    const modalAmount = document.getElementById('modalAmount');
+    const btnAmount = document.getElementById('btnAmount');
+    const confirmPaymentBtn = document.getElementById('confirmPaymentBtn');
+    const paymentOptionsView = document.getElementById('paymentOptionsView');
+    const processingView = document.getElementById('processingView');
 
+    // 1. Quantity Logic
     function updateTotal() {
         let quantity = parseInt(quantityInput.value, 10);
-        if (isNaN(quantity) || quantity < 1) {
-            quantity = 1;
-            quantityInput.value = 1;
-        }
+        if (isNaN(quantity) || quantity < 1) { quantity = 1; quantityInput.value = 1; }
         const total = (quantity * unitPrice).toFixed(2);
         totalPriceEl.textContent = total;
     }
-
-    incrementBtn.addEventListener('click', function() {
-        quantityInput.value = parseInt(quantityInput.value, 10) + 1;
-        updateTotal();
-    });
-
+    incrementBtn.addEventListener('click', function() { quantityInput.value = parseInt(quantityInput.value, 10) + 1; updateTotal(); });
     decrementBtn.addEventListener('click', function() {
         let currentQuantity = parseInt(quantityInput.value, 10);
-        if (currentQuantity > 1) {
-            quantityInput.value = currentQuantity - 1;
-            updateTotal();
+        if (currentQuantity > 1) { quantityInput.value = currentQuantity - 1; updateTotal(); }
+    });
+    quantityInput.addEventListener('input', updateTotal);
+
+    // 2. Form Submission Interception
+    orderForm.addEventListener('submit', function(e) {
+        const paymentMethod = document.querySelector('input[name="payment_method"]:checked').value;
+        
+        if (paymentMethod === 'online') {
+            e.preventDefault(); // Stop normal submission
+            
+            // Update Modal Data
+            const currentTotal = totalPriceEl.textContent;
+            modalAmount.textContent = currentTotal;
+            btnAmount.textContent = currentTotal;
+            
+            // Show Modal
+            paymentModal.style.display = 'flex';
+        }
+        // If COD, let the form submit normally
+    });
+
+    // 3. Modal Logic
+    closeModal.addEventListener('click', function() {
+        paymentModal.style.display = 'none';
+    });
+
+    // Close on click outside
+    paymentModal.addEventListener('click', function(e) {
+        if (e.target === paymentModal) {
+            paymentModal.style.display = 'none';
         }
     });
 
-    quantityInput.addEventListener('input', updateTotal);
+    // 4. Fake Payment Process
+    confirmPaymentBtn.addEventListener('click', function() {
+        // Switch to processing view
+        paymentOptionsView.style.display = 'none';
+        processingView.style.display = 'block';
+
+        // Simulate 2 second delay for payment
+        setTimeout(function() {
+            // Once "paid", submit the real form programmatically
+            orderForm.submit();
+        }, 2000);
+    });
 });
 </script>
 {% endblock %}

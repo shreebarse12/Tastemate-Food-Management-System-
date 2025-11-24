@@ -22,3 +22,9 @@ class orders(models.Model):
 
     def __str__(self):
         return f"Order #{self.id} - {self.student.username} - {self.dish.name}"
+    
+    payment_method = models.CharField(
+        max_length=10, 
+        choices=[('cod', 'Pay at Counter'), ('online', 'Paid Online')],
+        default='cod'
+    )
